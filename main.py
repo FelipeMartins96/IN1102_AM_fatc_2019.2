@@ -28,7 +28,6 @@ T = 150
 # Error threshold
 e = 10e-10
 
-
 for view in [rgb_view]:
     # Number of points
     n = view.shape[0]
@@ -94,8 +93,8 @@ for view in [rgb_view]:
                     for j in range(p):
                         phi_a += lamb[j] * 2 *(1 - gaussian(view[k,j], v[i,j]))
                         phi_b += lamb[j] * 2 *(1 - gaussian(view[k,j], v[h,j]))
-                    a += phi_a / phi_b
-            u[i,k] = (a ** (1/(m-1)))**-1 
+                    a += (phi_a / phi_b)**(1/(m-1))
+            u[i,k] = a ** (-1)
 
         # Calculate J 
         J_prev = J

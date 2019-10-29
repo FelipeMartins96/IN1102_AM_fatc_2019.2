@@ -66,21 +66,21 @@ for view in [shape_view, rgb_view]:
                 v[i,j] = a / b
 
         # Update features weights
+        a = 1
+        for l in range(p):
+            b = 0
+            for i in range(c):
+                for k in range(n):
+                    b += ((u[i,k])**m) * (2 * (1 - gaussian(view[k,l], v[i,l])))
+            a *= b
         for j in range(p):
-            a = 1
-            for l in range(p):
-                b = 0
-                for i in range(c):
-                    for k in range(n):
-                        b += ((u[i,k])**m) * (2 * (1 - gaussian(view[k,l], v[i,l])))
-                a *= b
             b = 0
             for i in range(c):
                     for k in range(n):
                         b += ((u[i,k])**m) * (2 * (1 - gaussian(view[k,j], v[i,j])))
-    
-            lamb[j] = (a ** (1/p)) / b
 
+            lamb[j] = (a ** (1/p)) / b
+            
         # Update fuzzy membership degree 
         for i in range(c):
             for k in range(n):

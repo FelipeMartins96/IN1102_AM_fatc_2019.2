@@ -5,7 +5,7 @@ from scipy.spatial.distance import pdist
 
 # Calculate Kernel
 def gaussian(x,v,sigma):
-    return math.exp((-((x-v)**2))/(2*(sigma**2)))
+    return math.exp((-((x-v)**2))/(sigma))
 
 
 # Read data from Image Segmentation Database
@@ -74,11 +74,11 @@ for view in [rgb_view]:
 
         # Update features weights
         a = 1
-        for l in range(p):
+        for j in range(p):
             b = 0
             for i in range(c):
                 for k in range(n):
-                    b += ((u[i,k])**m) * (2 * (1 - gaussian(view[k,l], v[i,l], sigma[j])))
+                    b += ((u[i,k])**m) * (2 * (1 - gaussian(view[k,j], v[i,j], sigma[j])))
             a *= b
         for j in range(p):
             b = 0

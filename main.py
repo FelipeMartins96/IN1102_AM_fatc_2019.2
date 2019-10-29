@@ -28,7 +28,7 @@ T = 150
 # Error threshold
 e = 10e-10
 
-for view in [rgb_view]:
+for view in [shape_view, rgb_view]:
     # Number of points
     n = view.shape[0]
     # Number of features
@@ -51,8 +51,6 @@ for view in [rgb_view]:
     v = np.random.rand(c, p)
 
     J = 0
-
-    old_settings = np.seterr(all='warn', over='raise')
 
     for it in range(T):
         print("iteration ", it)

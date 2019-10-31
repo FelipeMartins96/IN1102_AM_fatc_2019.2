@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import math
 from scipy.spatial.distance import pdist
+from sklearn.preprocessing import minmax_scale
 
 # Calculate Kernel
 def gaussian(x,v,sigma):
@@ -18,6 +19,10 @@ shape_view = data.values[:, 0:9]
 # 10 Remaining features
 # rgb_view([2100]points (n), [10]features (p))
 rgb_view = data.values[:, 9:19]
+
+# Normalize data
+rgb_view = minmax_scale(rgb_view, feature_range=(0, 1), axis=0)
+shape_view = minmax_scale(shape_view, feature_range=(0, 1), axis=0)
 
 data = {'rgb': rgb_view, 'shape': shape_view}
 
@@ -42,6 +47,8 @@ for name, view in data.items():
         dist = pdist(view[:,j].reshape(-1,1)) # Size given by Binominal Coefficient
         mean = np.mean([np.quantile(dist, 0.1), np.quantile(dist, 0.9)])
         sigma.append(mean)
+
+    print(sigma)
 
     for epoch in range(100):
         print("epoch ", epoch)

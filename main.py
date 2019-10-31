@@ -129,7 +129,7 @@ for name, view in data.items():
             best_v = v
             best_J = J
     
-    # 
+    # Save results
     best_J = np.array([best_J])
     np.savetxt(name + "/best_u.csv", best_u, delimiter=",")
     np.savetxt(name + "/best_lamb.csv", best_lamb, delimiter=",")

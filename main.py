@@ -3,6 +3,7 @@ import numpy as np
 import math
 from scipy.spatial.distance import pdist
 from sklearn.preprocessing import minmax_scale
+import os
 
 # Calculate Kernel
 def gaussian(x,v,sigma):
@@ -50,8 +51,6 @@ for name, view in data.items():
         dist = pdist(view[:,j].reshape(-1,1)) # Size given by Binominal Coefficient
         mean = np.mean([np.quantile(dist, 0.1), np.quantile(dist, 0.9)])
         sigma.append(mean)
-
-    print(sigma)
 
     for epoch in range(100):
         print("epoch ", epoch)
@@ -139,6 +138,9 @@ for name, view in data.items():
             best_v = v
             best_J = J
     
+    if not os.path.isdir(name):
+        os.makedirs(name)
+
     # Save results
     best_J = np.array([best_J])
     np.savetxt(name + "/best_u.csv", best_u, delimiter=",")

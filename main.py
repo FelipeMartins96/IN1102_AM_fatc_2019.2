@@ -1,9 +1,11 @@
 import pandas as pd
 import numpy as np
 import math
+import os
+import shutil
 from scipy.spatial.distance import pdist
 from sklearn.preprocessing import minmax_scale
-import os
+from sklearn.metrics import adjusted_rand_score
 
 # Calculate Kernel
 def gaussian(x,v,sigma):
@@ -12,6 +14,9 @@ def gaussian(x,v,sigma):
 
 # Read data from Image Segmentation Database
 data = pd.read_csv('data/seg.test')
+
+# Load ground thruth labels
+ground_truth = np.genfromtxt('data/test_gt.csv', delimiter=',')
 
 # Splits into shape view and rgb view
 # First 9 features
@@ -38,8 +43,18 @@ m = 1.6
 T = 150
 # Error threshold
 e = 10e-10
+# Number of Epochs
+ep = 5
+
+if not os.path.isdir("results"):
+    os.makedirs("results")
 
 for name, view in data.items():
+
+    if os.path.isdir("results/" + name):
+        shutil.rmtree("results/" + name)
+    else:
+        os.makedirs("results/" + name)
 
     # Number of points
     n = view.shape[0]
@@ -52,8 +67,8 @@ for name, view in data.items():
         mean = np.mean([np.quantile(dist, 0.1), np.quantile(dist, 0.9)])
         sigma.append(mean)
 
-    for epoch in range(100):
-        print("epoch ", epoch)
+    for epoch in range(ep):
+        print("epoch ", epoch+1)
         
         # Randomly initialize the fuzzy membership degree
         # u( clusters (c), points (n))
@@ -75,7 +90,7 @@ for name, view in data.items():
         best_J = float("inf")
 
         for it in range(T):
-            print("iteration ", it)
+            print("iteration ", it+1)
 
             # Update cluster centrois v
             for i in range(c):
@@ -126,27 +141,32 @@ for name, view in data.items():
                         phi += lamb[j] * 2 *(1 - gaussian(view[k,j], v[i,j], sigma[j]))
                     J +=  ((u[i,k])**m) * phi
             
+            # Defuzzyfy
+            crisp = np.argmax(u, axis=0)
+
+            # Calculate ajusted rand index
+            print("Adjusted rand index: " + str(adjusted_rand_score(ground_truth, crisp)))
+
             print(J)
             if (J_prev - J) < e:
                 if J_prev < J:
                     print("ERROR!")
                 break
-            
+        
+        # Save best results
         if J < best_J:
-            best_u = u
-            best_lamb = lamb
-            best_v = v
-            best_J = J
-    
-    if not os.path.isdir(name):
-        os.makedirs(name)
+            n = 1
+            while(True):
+                res_dir = "results/" + name + "/" + name + "_" + str(n)
+                if not os.path.isdir(res_dir):
+                    os.makedirs(res_dir)
+                    np.savetxt(res_dir + "/best_u.csv", u, delimiter=",")
+                    np.savetxt(res_dir + "/best_lamb.csv", lamb, delimiter=",")
+                    np.savetxt(res_dir + "/best_v.csv", v, delimiter=",")
+                    np.savetxt(res_dir + "/best_J.csv", np.array([J]), delimiter=",")
+                    break
+                n += 1
 
-    # Save results
-    best_J = np.array([best_J])
-    np.savetxt(name + "/best_u.csv", best_u, delimiter=",")
-    np.savetxt(name + "/best_lamb.csv", best_lamb, delimiter=",")
-    np.savetxt(name + "/best_v.csv", best_v, delimiter=",")
-    np.savetxt(name + "/best_J.csv", best_J, delimiter=",")
     
 
 

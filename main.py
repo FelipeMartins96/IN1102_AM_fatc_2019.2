@@ -150,7 +150,7 @@ for name, view in data.items():
             print("Adjusted rand index: " + str(adjusted_rand_score(ground_truth, crisp)))
             print(J)
 
-
+            # Checks if error is reducing with iterations
             if (J_prev - J) < e:
                 if J_prev < J:
                     print("ERROR!")

@@ -44,7 +44,7 @@ T = 150
 # Error threshold
 e = 10e-10
 # Number of Epochs
-ep = 5
+ep = 100
 
 if not os.path.isdir("results"):
     os.makedirs("results")

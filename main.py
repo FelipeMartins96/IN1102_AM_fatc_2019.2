@@ -144,10 +144,13 @@ for name, view in data.items():
             # Defuzzyfy
             crisp = np.argmax(u, axis=0)
 
-            # Calculate ajusted rand index
+            # print ajusted rand index
+            for i in range(7):
+                print("Number of points in cluster " + str(i+1) + ": " + str(np.count_nonzero(crisp == i)))
             print("Adjusted rand index: " + str(adjusted_rand_score(ground_truth, crisp)))
-
             print(J)
+
+
             if (J_prev - J) < e:
                 if J_prev < J:
                     print("ERROR!")

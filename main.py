@@ -40,7 +40,7 @@ c = 7
 # Fuzziness of membership
 m = 1.6
 # Iteration limit
-T = 150
+T = 2
 # Error threshold
 e = 10e-10
 # Number of Epochs
@@ -160,7 +160,7 @@ for name, view in data.items():
         if J < best_J:
             i = 1
             while(True):
-                res_dir = "results/" + name + "/" + name + "_" + str(n)
+                res_dir = "results/" + name + "/" + name + "_" + str(i)
                 if not os.path.isdir(res_dir):
                     os.makedirs(res_dir)
                     np.savetxt(res_dir + "/best_u.csv", u, delimiter=",")

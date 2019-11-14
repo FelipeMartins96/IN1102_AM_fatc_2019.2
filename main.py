@@ -158,6 +158,7 @@ for name, view in data.items():
         
         # Save best results
         if J < best_J:
+            best_J = J
             i = 1
             while(True):
                 res_dir = "results/" + name + "/" + name + "_" + str(i)

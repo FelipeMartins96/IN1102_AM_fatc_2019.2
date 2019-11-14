@@ -147,8 +147,8 @@ for name, view in data.items():
             # print ajusted rand index
             for i in range(7):
                 print("Number of points in cluster " + str(i+1) + ": " + str(np.count_nonzero(crisp == i)))
-            print("Adjusted rand index: " + str(adjusted_rand_score(ground_truth, crisp)))
             print(J)
+            print("Adjusted rand index: " + str(adjusted_rand_score(ground_truth, crisp)))
 
             # Checks if error is reducing with iterations
             if (J_prev - J) < e:
@@ -158,7 +158,7 @@ for name, view in data.items():
         
         # Save best results
         if J < best_J:
-            n = 1
+            i = 1
             while(True):
                 res_dir = "results/" + name + "/" + name + "_" + str(n)
                 if not os.path.isdir(res_dir):
@@ -168,7 +168,7 @@ for name, view in data.items():
                     np.savetxt(res_dir + "/best_v.csv", v, delimiter=",")
                     np.savetxt(res_dir + "/best_J.csv", np.array([J]), delimiter=",")
                     break
-                n += 1
+                i += 1
 
     
 

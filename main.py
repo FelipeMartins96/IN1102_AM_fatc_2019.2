@@ -40,7 +40,7 @@ c = 7
 # Fuzziness of membership
 m = 1.6
 # Iteration limit
-T = 2
+T = 150
 # Error threshold
 e = 10e-10
 # Number of Epochs

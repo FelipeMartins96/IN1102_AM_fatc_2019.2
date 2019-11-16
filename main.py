@@ -67,6 +67,7 @@ for name, view in data.items():
         mean = np.mean([np.quantile(dist, 0.1), np.quantile(dist, 0.9)])
         sigma.append(mean)
 
+    best_J = float("inf")
     for epoch in range(ep):
         print("epoch ", epoch+1)
         
@@ -87,10 +88,9 @@ for name, view in data.items():
         v = np.random.rand(c, p)
 
         J = float("inf")
-        best_J = float("inf")
 
         for it in range(T):
-            print("iteration ", it+1)
+            # print("iteration ", it+1)
 
             # Update cluster centrois v
             for i in range(c):
@@ -145,17 +145,16 @@ for name, view in data.items():
             crisp = np.argmax(u, axis=0)
 
             # print ajusted rand index
-            for i in range(7):
-                print("Number of points in cluster " + str(i+1) + ": " + str(np.count_nonzero(crisp == i)))
-            print(J)
-            print("Adjusted rand index: " + str(adjusted_rand_score(ground_truth, crisp)))
+            # for i in range(7):
+            #     print("Number of points in cluster " + str(i+1) + ": " + str(np.count_nonzero(crisp == i)))
+            # print(J)
+            # print("Adjusted rand index: " + str(adjusted_rand_score(ground_truth, crisp)))
 
             # Checks if error is reducing with iterations
             if (J_prev - J) < e:
                 if J_prev < J:
                     print("ERROR!")
                 break
-        
         # Save best results
         if J < best_J:
             best_J = J
@@ -170,7 +169,8 @@ for name, view in data.items():
                     np.savetxt(res_dir + "/best_J.csv", np.array([J]), delimiter=",")
                     break
                 i += 1
-
+        print("J: " + str(J))
+        print("Best J: " + str(best_J))
     
 
 

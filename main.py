@@ -30,8 +30,8 @@ rgb_view = data.values[:, 9:19]
 shape_view = shape_view[:,[0,1,3,5,6,7,8]]
 
 # Normalize data
-rgb_view = minmax_scale(rgb_view, feature_range=(0, 1), axis=0)
-shape_view = minmax_scale(shape_view, feature_range=(0, 1), axis=0)
+# rgb_view = minmax_scale(rgb_view, feature_range=(0, 1), axis=0)
+# shape_view = minmax_scale(shape_view, feature_range=(0, 1), axis=0)
 
 data = {'rgb': rgb_view, 'shape': shape_view}
 
@@ -83,9 +83,14 @@ for name, view in data.items():
         # lamb(features (p))
         lamb = np.ones(p)
 
-        # Initialize cluster centroids
+        # Initialize cluster centroids randomly
         # v(clusters (c), features (p))
-        v = np.random.rand(c, p)
+        # v = np.random.rand(c, p)
+
+        # Initialize cluster centroids from data
+        v = np.copy(view)
+        np.random.shuffle(v)
+        v = v[0:c, :]
 
         J = float("inf")
 
@@ -145,10 +150,10 @@ for name, view in data.items():
             crisp = np.argmax(u, axis=0)
 
             # print ajusted rand index
-            # for i in range(7):
-            #     print("Number of points in cluster " + str(i+1) + ": " + str(np.count_nonzero(crisp == i)))
-            # print(J)
-            # print("Adjusted rand index: " + str(adjusted_rand_score(ground_truth, crisp)))
+            for i in range(7):
+                print("Number of points in cluster " + str(i+1) + ": " + str(np.count_nonzero(crisp == i)))
+            print(J)
+            print("Adjusted rand index: " + str(adjusted_rand_score(ground_truth, crisp)))
 
             # Checks if error is reducing with iterations
             if (J_prev - J) < e:

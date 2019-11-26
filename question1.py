@@ -8,7 +8,8 @@ from sklearn.preprocessing import minmax_scale
 from sklearn.metrics import adjusted_rand_score
 
 # TODO Plotar grafico PCA para resultado
-# TODO Salvar resultados de melhor rand juntocom J
+# TODO rodar para centrois randomicos e centroides pelos dados
+# TODO Salvar resultados de melhor rand junto com J
 
 # Calculate Kernel
 def gaussian(x,v,sigma):
@@ -33,8 +34,8 @@ rgb_view = data.values[:, 9:19]
 shape_view = shape_view[:,[0,1,3,5,6,7,8]]
 
 # Normalize data
-# rgb_view = minmax_scale(rgb_view, feature_range=(0, 1), axis=0)
-# shape_view = minmax_scale(shape_view, feature_range=(0, 1), axis=0)
+rgb_view = minmax_scale(rgb_view, feature_range=(0, 1), axis=0)
+shape_view = minmax_scale(shape_view, feature_range=(0, 1), axis=0)
 
 data = {'rgb': rgb_view, 'shape': shape_view}
 
@@ -71,6 +72,8 @@ for name, view in data.items():
         sigma.append(mean)
 
     best_J = float("inf")
+    best_rand = 0
+
     for epoch in range(ep):
         print("epoch ", epoch+1)
         
@@ -88,14 +91,15 @@ for name, view in data.items():
 
         # Initialize cluster centroids randomly
         # v(clusters (c), features (p))
-        # v = np.random.rand(c, p)
+        v = np.random.rand(c, p)
 
         # Initialize cluster centroids from data
-        v = np.copy(view)
-        np.random.shuffle(v)
-        v = v[0:c, :]
+        # v = np.copy(view)
+        # np.random.shuffle(v)
+        # v = v[0:c, :]
 
         J = float("inf")
+        rand = 0
 
         for it in range(T):
             # print("iteration ", it+1)
@@ -152,23 +156,24 @@ for name, view in data.items():
             # Defuzzyfy
             crisp = np.argmax(u, axis=0)
 
-            # print ajusted rand index
-            for i in range(7):
-                print("Number of points in cluster " + str(i+1) + ": " + str(np.count_nonzero(crisp == i)))
-            print(J)
-            print("Adjusted rand index: " + str(adjusted_rand_score(ground_truth, crisp)))
+            # # print ajusted rand index
+            # for i in range(7):
+            #     print("Number of points in cluster " + str(i+1) + ": " + str(np.count_nonzero(crisp == i)))
+            # print(J)
+            # print("Adjusted rand index: " + str(adjusted_rand_score(ground_truth, crisp)))
+            rand = adjusted_rand_score(ground_truth, crisp)
 
             # Checks if error is reducing with iterations
             if (J_prev - J) < e:
                 if J_prev < J:
                     print("ERROR!")
                 break
-        # Save best results
+        # Save best J results
         if J < best_J:
             best_J = J
             i = 1
             while(True):
-                res_dir = "results/" + name + "/" + name + "_" + str(i)
+                res_dir = "results/" + name + "_J/" + name + "_" + str(i)
                 if not os.path.isdir(res_dir):
                     os.makedirs(res_dir)
                     np.savetxt(res_dir + "/best_u.csv", u, delimiter=",")
@@ -179,6 +184,23 @@ for name, view in data.items():
                 i += 1
         print("J: " + str(J))
         print("Best J: " + str(best_J))
+
+        # Save best rand results
+        if  rand > best_rand:
+            best_rand = rand
+            i = 1
+            while(True):
+                res_dir = "results/" + name + "_rand/" + name + "_" + str(i)
+                if not os.path.isdir(res_dir):
+                    os.makedirs(res_dir)
+                    np.savetxt(res_dir + "/best_u.csv", u, delimiter=",")
+                    np.savetxt(res_dir + "/best_lamb.csv", lamb, delimiter=",")
+                    np.savetxt(res_dir + "/best_v.csv", v, delimiter=",")
+                    np.savetxt(res_dir + "/best_J.csv", np.array([J]), delimiter=",")
+                    break
+                i += 1
+        print("rand: " + str(rand))
+        print("Best rand: " + str(best_rand))
     
 
 

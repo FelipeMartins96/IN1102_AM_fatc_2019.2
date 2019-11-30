@@ -11,11 +11,10 @@ from sklearn.model_selection import GridSearchCV
 from scipy.stats import wilcoxon
 
 def mean_confidence_interval(data, confidence=0.95):
-	a = 1.0 * np.array(data)
-	n = len(a)
-	m, se = np.mean(a), scipy.stats.sem(a)
-	h = se * scipy.stats.t.ppf((1 + confidence) / 2., n-1)
-	return m, m-h, m+h
+    mean = np.mean(data)
+    std = np.std(data)
+    conf_int = scipy.stats.norm.interval(confidence, loc=mean, scale=std)
+    return conf_int
 
 # Read data from Image Segmentation Database
 data = pd.read_csv('data/seg.test')
@@ -53,8 +52,10 @@ grid_1.fit(shape_view, ground_truth)
 grid_2.fit(rgb_view, ground_truth)
 
 
-print(grid_1.best_params_['n_neighbors'])
-print(grid_2.best_params_['n_neighbors'])
+print('---')
+print('Best K for grid_1: ', grid_1.best_params_['n_neighbors'])
+print('Best K for grid_2: ', grid_2.best_params_['n_neighbors'])
+print('---')
 
 rskf = RepeatedStratifiedKFold(n_splits=10, n_repeats=30)
 score_gb = []
@@ -65,13 +66,6 @@ for train_index, test_index in rskf.split(shape_view, ground_truth):
     shape_train, shape_test = shape_view[train_index], shape_view[test_index]
     rgb_train, rgb_test = rgb_view[train_index], rgb_view[test_index]
     true_labels_train, true_labels_test = ground_truth[train_index], ground_truth[test_index]
-
-    # print('view: ', view+1)
-    # matrix = D_matrices[view]
-    # print(rskf.get_n_splits(true_labels))
-
-        # print('TRAIN: ', len(train_index))
-        # print('TEST: ', len(test_index))
 
     #Classificador Bayesiano Gaussiano
     gb_1 = GaussianNB()
@@ -105,16 +99,24 @@ for train_index, test_index in rskf.split(shape_view, ground_truth):
     score_kb.append(np.equal(kb_ensemble, true_labels_test).sum() / true_labels_test.shape[0])
 
 # Teste Wilcoxon nos 2 classificadores acima
-w, p = wilcoxon(score_gb, score_kb)
-print(w,p)
+stat, p = wilcoxon(score_gb, score_kb)
+print(wilcoxon(score_gb, score_kb))
+print('Statistics=%.3f, p=%.3f' % (stat, p))
+# Interpretação
+alpha = 0.05
+if p > alpha:
+    print('Mesma distribuição (falha em rejeitar H0)')
+    print('---')
+else:
+    print('Distribuições diferentes (rejeita H0)')
+    print('---')
 
-#Estatistica
-stats_results = np.array([
-    mean_confidence_interval(score_gb),
-    mean_confidence_interval(score_kb),
-    w,
-    p])
-print(stats_results)
+# Intervalo de confiança
+print('Intervalo de confiança para GaussianNB: ', mean_confidence_interval(score_gb))
+print('Acurácia para GaussianNB: ', np.mean(score_gb))
+print('Intervalo de confiança para KNeighborsClassifier: ', mean_confidence_interval(score_kb))
+print('Acurácia para KNeighborsClassifier: ', np.mean(score_kb))
+print('---')
     
 hist_skb  = sns.distplot(score_kb, hist=True, kde=True,
     bins=int(50), color = 'green',

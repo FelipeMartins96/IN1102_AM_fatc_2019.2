@@ -91,12 +91,12 @@ for name, view in data.items():
 
         # Initialize cluster centroids randomly
         # v(clusters (c), features (p))
-        v = np.random.rand(c, p)
+        # v = np.random.rand(c, p)
 
         # Initialize cluster centroids from data
-        # v = np.copy(view)
-        # np.random.shuffle(v)
-        # v = v[0:c, :]
+        v = np.copy(view)
+        np.random.shuffle(v)
+        v = v[0:c, :]
 
         J = float("inf")
         rand = 0

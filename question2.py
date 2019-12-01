@@ -42,7 +42,8 @@ kb_1 = KNeighborsClassifier()
 kb_2 = KNeighborsClassifier()
 
 
-k_range = list(range(1,31))
+# O número de K deve seguir: 1<= k <= np.sqrt(n) e apenas valores ímpares
+k_range = [num for num in list(range(1, int(round(np.sqrt(shape_view.shape[0]))))) if num % 2 == 1]
 param_grid = dict(n_neighbors=k_range)
 
 grid_1 = GridSearchCV(kb_1, param_grid, cv=10, scoring='accuracy', n_jobs=6)

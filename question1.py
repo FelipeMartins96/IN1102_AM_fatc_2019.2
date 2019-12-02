@@ -6,10 +6,9 @@ import shutil
 from scipy.spatial.distance import pdist
 from sklearn.preprocessing import minmax_scale
 from sklearn.metrics import adjusted_rand_score
+from sklearn.decomposition import PCA
+import matplotlib.pyplot as plt
 
-# TODO Plotar grafico PCA para resultado
-# TODO rodar para centrois randomicos e centroides pelos dados
-# TODO Salvar resultados de melhor rand junto com J
 
 # Calculate Kernel
 def gaussian(x,v,sigma):
@@ -21,6 +20,13 @@ data = pd.read_csv('data/seg.test')
 
 # Load ground thruth labels
 ground_truth = np.genfromtxt('data/test_gt.csv', delimiter=',')
+
+# Data initialization for pca visualization
+# view = data.values[:, 0:19]
+# view = minmax_scale(view, feature_range=(0, 1), axis=0)
+# pca = PCA(n_components=2)
+# principalComponents = pca.fit_transform(view)
+# principalDf = pd.DataFrame(data = principalComponents, columns = ['principal component 1', 'principal component 2'])
 
 # Splits into shape view and rgb view
 # First 9 features
@@ -91,12 +97,12 @@ for name, view in data.items():
 
         # Initialize cluster centroids randomly
         # v(clusters (c), features (p))
-        # v = np.random.rand(c, p)
+        v = np.random.rand(c, p)
 
         # Initialize cluster centroids from data
-        v = np.copy(view)
-        np.random.shuffle(v)
-        v = v[0:c, :]
+        # v = np.copy(view)
+        # np.random.shuffle(v)
+        # v = v[0:c, :]
 
         J = float("inf")
         rand = 0
@@ -157,11 +163,32 @@ for name, view in data.items():
             crisp = np.argmax(u, axis=0)
 
             # # print ajusted rand index
-            # for i in range(7):
-            #     print("Number of points in cluster " + str(i+1) + ": " + str(np.count_nonzero(crisp == i)))
-            # print(J)
-            # print("Adjusted rand index: " + str(adjusted_rand_score(ground_truth, crisp)))
+            for i in range(7):
+                print("Number of points in cluster " + str(i+1) + ": " + str(np.count_nonzero(crisp == i)))
+            print(J)
+            print("Adjusted rand index: " + str(adjusted_rand_score(ground_truth, crisp)))
             rand = adjusted_rand_score(ground_truth, crisp)
+
+            # # Saving PCA visualization 
+            # crisp = pd.DataFrame({'crisp': crisp[:]})
+            # finalDf = pd.concat([principalDf, crisp], axis = 1)
+            # fig = plt.figure(figsize = (8,8))
+            # ax = fig.add_subplot(1,1,1) 
+            # ax.set_xlabel('Principal Component 1', fontsize = 15)
+            # ax.set_ylabel('Principal Component 2', fontsize = 15)
+            # ax.set_title('%s View PCA Clusters, rand: %.3f, J: %.2f' % (name, rand, J), fontsize = 20)
+            # targets = [0, 1, 2, 3, 4, 5, 6]
+            # colors = ['r', 'g', 'b', 'c', 'm', 'y', 'k']
+            # for target, color in zip(targets,colors):
+            #     indicesToKeep = finalDf['crisp'] == target
+            #     ax.scatter(finalDf.loc[indicesToKeep, 'principal component 1']
+            #             , finalDf.loc[indicesToKeep, 'principal component 2']
+            #             , c = color
+            #             , s = 50)
+            # ax.legend(targets)
+            # ax.grid()
+            # fig.savefig('results/view_' + name + str(it))
+            # plt.close(fig) 
 
             # Checks if error is reducing with iterations
             if (J_prev - J) < e:

@@ -10,11 +10,28 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import GridSearchCV
 from scipy.stats import wilcoxon
 
-def mean_confidence_interval(data, confidence=0.95):
-    mean = np.mean(data)
-    std = np.std(data)
-    conf_int = scipy.stats.norm.interval(confidence, loc=mean, scale=std)
-    return conf_int
+def mean_confidence_interval(dataset, alpha=5.0):
+  # bootstrap
+  dataset = np.array(dataset)
+  scores = list()
+  for _ in range(100):
+    # bootstrap sample
+    indices = np.random.randint(0, len(dataset), len(dataset))
+    sample = dataset[indices]
+    # calculate and store statistic
+    statistic = np.mean(sample)
+    scores.append(statistic)
+  # calculate 95% confidence intervals (100 - alpha)
+  alpha = 5.0
+  # calculate lower percentile (e.g. 2.5)
+  lower_p = alpha / 2.0
+  # retrieve observation at lower percentile
+  lower = max(0.0, np.percentile(scores, lower_p))
+  # calculate upper percentile (e.g. 97.5)
+  upper_p = (100 - alpha) + (alpha / 2.0)
+  # retrieve observation at upper percentile
+  upper = min(1.0, np.percentile(scores, upper_p))
+  return [lower, upper]
 
 # Read data from Image Segmentation Database
 data = pd.read_csv('data/seg.test')
@@ -42,7 +59,8 @@ kb_1 = KNeighborsClassifier()
 kb_2 = KNeighborsClassifier()
 
 
-k_range = list(range(1,31))
+# O número de K deve seguir: 1<= k <= np.sqrt(n) e apenas valores ímpares
+k_range = [num for num in list(range(1, int(round(np.sqrt(shape_view.shape[0]))))) if num % 2 == 1]
 param_grid = dict(n_neighbors=k_range)
 
 grid_1 = GridSearchCV(kb_1, param_grid, cv=10, scoring='accuracy', n_jobs=6)

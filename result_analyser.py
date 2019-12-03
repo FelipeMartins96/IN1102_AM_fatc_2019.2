@@ -34,7 +34,7 @@ else:
 # Normalize data
 view = minmax_scale(view, feature_range=(0, 1), axis=0)
 
-if sys.argv[1] == 'gt' is False:
+if sys.argv[1] != 'gt':
     J = pd.read_csv(sys.argv[1] + "/best_J.csv", header=None).values[:]
     print("Error (J): %f" % J)
 rand = adjusted_rand_score(ground_truth.values, crisp.values)

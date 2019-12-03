@@ -21,24 +21,24 @@ data = pd.read_csv('data/seg.test')
 # Load ground thruth labels
 ground_truth = np.genfromtxt('data/test_gt.csv', delimiter=',')
 
-# Data initialization for pca visualization
-view = data.values[:, 0:19]
-view = minmax_scale(view, feature_range=(0, 1), axis=0)
-pca = PCA(n_components=2)
-principalComponents = pca.fit_transform(view)
-principalDf_view = pd.DataFrame(data = principalComponents, columns = ['principal component 1', 'principal component 2'])
+# # Data initialization for pca visualization
+# view = data.values[:, 0:19]
+# view = minmax_scale(view, feature_range=(0, 1), axis=0)
+# pca = PCA(n_components=2)
+# principalComponents = pca.fit_transform(view)
+# principalDf_view = pd.DataFrame(data = principalComponents, columns = ['principal component 1', 'principal component 2'])
 
-view = data.values[:, 0:9]
-view = minmax_scale(view, feature_range=(0, 1), axis=0)
-pca = PCA(n_components=2)
-principalComponents = pca.fit_transform(view)
-principalDf_shape = pd.DataFrame(data = principalComponents, columns = ['principal component 1', 'principal component 2'])
+# view = data.values[:, 0:9]
+# view = minmax_scale(view, feature_range=(0, 1), axis=0)
+# pca = PCA(n_components=2)
+# principalComponents = pca.fit_transform(view)
+# principalDf_shape = pd.DataFrame(data = principalComponents, columns = ['principal component 1', 'principal component 2'])
 
-view = data.values[:, 9:19]
-view = minmax_scale(view, feature_range=(0, 1), axis=0)
-pca = PCA(n_components=2)
-principalComponents = pca.fit_transform(view)
-principalDf_rgb = pd.DataFrame(data = principalComponents, columns = ['principal component 1', 'principal component 2'])
+# view = data.values[:, 9:19]
+# view = minmax_scale(view, feature_range=(0, 1), axis=0)
+# pca = PCA(n_components=2)
+# principalComponents = pca.fit_transform(view)
+# principalDf_rgb = pd.DataFrame(data = principalComponents, columns = ['principal component 1', 'principal component 2'])
 
 # Splits into shape view and rgb view
 # First 9 features
@@ -182,65 +182,65 @@ for name, view in data.items():
             rand = adjusted_rand_score(ground_truth, crisp)
 
             # # Saving PCA visualization 
-            crisp = pd.DataFrame({'crisp': crisp[:]})
-            finalDf = pd.concat([principalDf_view, crisp], axis = 1)
-            fig = plt.figure(figsize = (8,8))
-            ax = fig.add_subplot(1,1,1) 
-            ax.set_xlabel('Principal Component 1', fontsize = 15)
-            ax.set_ylabel('Principal Component 2', fontsize = 15)
-            ax.set_title('%s View PCA Clusters, rand: %.3f, J: %.2f' % (name, rand, J), fontsize = 20)
-            targets = [0, 1, 2, 3, 4, 5, 6]
-            colors = ['r', 'g', 'b', 'c', 'm', 'y', 'k']
-            for target, color in zip(targets,colors):
-                indicesToKeep = finalDf['crisp'] == target
-                ax.scatter(finalDf.loc[indicesToKeep, 'principal component 1']
-                        , finalDf.loc[indicesToKeep, 'principal component 2']
-                        , c = color
-                        , s = 50)
-            ax.legend(targets)
-            ax.grid()
-            fig.savefig('results/images/view_' + name + str(it))
-            plt.close(fig) 
+            # crisp = pd.DataFrame({'crisp': crisp[:]})
+            # finalDf = pd.concat([principalDf_view, crisp], axis = 1)
+            # fig = plt.figure(figsize = (8,8))
+            # ax = fig.add_subplot(1,1,1) 
+            # ax.set_xlabel('Principal Component 1', fontsize = 15)
+            # ax.set_ylabel('Principal Component 2', fontsize = 15)
+            # ax.set_title('%s View PCA Clusters, rand: %.3f, J: %.2f' % (name, rand, J), fontsize = 20)
+            # targets = [0, 1, 2, 3, 4, 5, 6]
+            # colors = ['r', 'g', 'b', 'c', 'm', 'y', 'k']
+            # for target, color in zip(targets,colors):
+            #     indicesToKeep = finalDf['crisp'] == target
+            #     ax.scatter(finalDf.loc[indicesToKeep, 'principal component 1']
+            #             , finalDf.loc[indicesToKeep, 'principal component 2']
+            #             , c = color
+            #             , s = 50)
+            # ax.legend(targets)
+            # ax.grid()
+            # fig.savefig('results/images/view_' + name + str(it))
+            # plt.close(fig) 
 
-            # Saving visualization for rgb or shape PCA
-            if name == 'shape':
-                finalDf = pd.concat([principalDf_shape, crisp], axis = 1)
-                fig = plt.figure(figsize = (8,8))
-                ax = fig.add_subplot(1,1,1) 
-                ax.set_xlabel('Principal Component 1', fontsize = 15)
-                ax.set_ylabel('Principal Component 2', fontsize = 15)
-                ax.set_title('%s View PCA Clusters, rand: %.3f, J: %.2f' % (name, rand, J), fontsize = 20)
-                targets = [0, 1, 2, 3, 4, 5, 6]
-                colors = ['r', 'g', 'b', 'c', 'm', 'y', 'k']
-                for target, color in zip(targets,colors):
-                    indicesToKeep = finalDf['crisp'] == target
-                    ax.scatter(finalDf.loc[indicesToKeep, 'principal component 1']
-                            , finalDf.loc[indicesToKeep, 'principal component 2']
-                            , c = color
-                            , s = 50)
-                ax.legend(targets)
-                ax.grid()
-                fig.savefig('results/images/shape_' + name + str(it))
-                plt.close(fig) 
-            elif name == 'rgb':
-                finalDf = pd.concat([principalDf_rgb, crisp], axis = 1)
-                fig = plt.figure(figsize = (8,8))
-                ax = fig.add_subplot(1,1,1) 
-                ax.set_xlabel('Principal Component 1', fontsize = 15)
-                ax.set_ylabel('Principal Component 2', fontsize = 15)
-                ax.set_title('%s View PCA Clusters, rand: %.3f, J: %.2f' % (name, rand, J), fontsize = 20)
-                targets = [0, 1, 2, 3, 4, 5, 6]
-                colors = ['r', 'g', 'b', 'c', 'm', 'y', 'k']
-                for target, color in zip(targets,colors):
-                    indicesToKeep = finalDf['crisp'] == target
-                    ax.scatter(finalDf.loc[indicesToKeep, 'principal component 1']
-                            , finalDf.loc[indicesToKeep, 'principal component 2']
-                            , c = color
-                            , s = 50)
-                ax.legend(targets)
-                ax.grid()
-                fig.savefig('results/images/rgb_' + name + str(it))
-                plt.close(fig) 
+            # # Saving visualization for rgb or shape PCA
+            # if name == 'shape':
+            #     finalDf = pd.concat([principalDf_shape, crisp], axis = 1)
+            #     fig = plt.figure(figsize = (8,8))
+            #     ax = fig.add_subplot(1,1,1) 
+            #     ax.set_xlabel('Principal Component 1', fontsize = 15)
+            #     ax.set_ylabel('Principal Component 2', fontsize = 15)
+            #     ax.set_title('%s View PCA Clusters, rand: %.3f, J: %.2f' % (name, rand, J), fontsize = 20)
+            #     targets = [0, 1, 2, 3, 4, 5, 6]
+            #     colors = ['r', 'g', 'b', 'c', 'm', 'y', 'k']
+            #     for target, color in zip(targets,colors):
+            #         indicesToKeep = finalDf['crisp'] == target
+            #         ax.scatter(finalDf.loc[indicesToKeep, 'principal component 1']
+            #                 , finalDf.loc[indicesToKeep, 'principal component 2']
+            #                 , c = color
+            #                 , s = 50)
+            #     ax.legend(targets)
+            #     ax.grid()
+            #     fig.savefig('results/images/shape_' + name + str(it))
+            #     plt.close(fig) 
+            # elif name == 'rgb':
+            #     finalDf = pd.concat([principalDf_rgb, crisp], axis = 1)
+            #     fig = plt.figure(figsize = (8,8))
+            #     ax = fig.add_subplot(1,1,1) 
+            #     ax.set_xlabel('Principal Component 1', fontsize = 15)
+            #     ax.set_ylabel('Principal Component 2', fontsize = 15)
+            #     ax.set_title('%s View PCA Clusters, rand: %.3f, J: %.2f' % (name, rand, J), fontsize = 20)
+            #     targets = [0, 1, 2, 3, 4, 5, 6]
+            #     colors = ['r', 'g', 'b', 'c', 'm', 'y', 'k']
+            #     for target, color in zip(targets,colors):
+            #         indicesToKeep = finalDf['crisp'] == target
+            #         ax.scatter(finalDf.loc[indicesToKeep, 'principal component 1']
+            #                 , finalDf.loc[indicesToKeep, 'principal component 2']
+            #                 , c = color
+            #                 , s = 50)
+            #     ax.legend(targets)
+            #     ax.grid()
+            #     fig.savefig('results/images/rgb_' + name + str(it))
+            #     plt.close(fig) 
 
 
 
@@ -255,7 +255,7 @@ for name, view in data.items():
             best_J = J
             i = 1
             while(True):
-                res_dir = "results/" + name + "_J/" + name + "_" + str(i)
+                res_dir = "results/" + name + "/" + name + "_J/" + name + "_" + str(i)
                 if not os.path.isdir(res_dir):
                     os.makedirs(res_dir)
                     np.savetxt(res_dir + "/best_u.csv", u, delimiter=",")
@@ -272,7 +272,7 @@ for name, view in data.items():
             best_rand = rand
             i = 1
             while(True):
-                res_dir = "results/" + name + "_rand/" + name + "_" + str(i)
+                res_dir = "results/" + name + "/" + name + "_rand/" + name + "_" + str(i)
                 if not os.path.isdir(res_dir):
                     os.makedirs(res_dir)
                     np.savetxt(res_dir + "/best_u.csv", u, delimiter=",")

@@ -41,4 +41,8 @@ python result_analyser.py results/rgb/rgb_J/rgb_1 view
 - `rand.py` 
   - outputs the rand index from the dataset labels and question1 output folder
 - `result_analyser.py` 
+<<<<<<< HEAD
   - outputs the rand index from the dataset labels and question1 output folder
+=======
+  - outputs results data and a 2D cluster visualization using principal component analysis
+>>>>>>> de139b6e70ae51e4a8d25f7a31f264d5b1fa5983

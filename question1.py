@@ -71,12 +71,22 @@ ep = 100
 if not os.path.isdir("results"):
     os.makedirs("results")
 
+if os.path.isdir("results/images" ):
+    shutil.rmtree("results/images")
+else:
+    os.makedirs("results/images")
+
 for name, view in data.items():
 
-    if os.path.isdir("results/" + name):
-        shutil.rmtree("results/" + name)
+    if os.path.isdir("results/" + name + '_J'):
+        shutil.rmtree("results/" + name + '_J')
     else:
-        os.makedirs("results/" + name)
+        os.makedirs("results/" + name + '_J')
+    
+    if os.path.isdir("results/" + name + '_rand'):
+        shutil.rmtree("results/" + name + '_rand')
+    else:
+        os.makedirs("results/" + name + '_rand')
 
     # Number of points
     n = view.shape[0]
@@ -182,6 +192,7 @@ for name, view in data.items():
             rand = adjusted_rand_score(ground_truth, crisp)
 
             # # Saving PCA visualization 
+<<<<<<< HEAD
             # crisp = pd.DataFrame({'crisp': crisp[:]})
             # finalDf = pd.concat([principalDf_view, crisp], axis = 1)
             # fig = plt.figure(figsize = (8,8))
@@ -201,6 +212,27 @@ for name, view in data.items():
             # ax.grid()
             # fig.savefig('results/images/view_' + name + str(it))
             # plt.close(fig) 
+=======
+            crisp = pd.DataFrame({'crisp': crisp[:]})
+            finalDf = pd.concat([principalDf_view, crisp], axis = 1)
+            fig = plt.figure(figsize = (8,8))
+            ax = fig.add_subplot(1,1,1) 
+            ax.set_xlabel('Principal Component 1', fontsize = 15)
+            ax.set_ylabel('Principal Component 2', fontsize = 15)
+            ax.set_title('%s View PCA Clusters, rand: %.3f, J: %.2f' % (name, rand, J), fontsize = 20)
+            targets = [0, 1, 2, 3, 4, 5, 6]
+            colors = ['r', 'g', 'b', 'c', 'm', 'y', 'k']
+            for target, color in zip(targets,colors):
+                indicesToKeep = finalDf['crisp'] == target
+                ax.scatter(finalDf.loc[indicesToKeep, 'principal component 1']
+                        , finalDf.loc[indicesToKeep, 'principal component 2']
+                        , c = color
+                        , s = 50)
+            ax.legend(targets)
+            ax.grid()
+            fig.savefig('results/images/view_' + name + str(it))
+            plt.close(fig) 
+>>>>>>> de139b6e70ae51e4a8d25f7a31f264d5b1fa5983
 
             # # Saving visualization for rgb or shape PCA
             # if name == 'shape':

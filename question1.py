@@ -68,25 +68,13 @@ e = 10e-10
 # Number of Epochs
 ep = 100
 
-if not os.path.isdir("results"):
+
+if os.path.isdir("results" ):
+    shutil.rmtree("results")
+else:
     os.makedirs("results")
 
-if os.path.isdir("results/images" ):
-    shutil.rmtree("results/images")
-else:
-    os.makedirs("results/images")
-
 for name, view in data.items():
-
-    if os.path.isdir("results/" + name + '_J'):
-        shutil.rmtree("results/" + name + '_J')
-    else:
-        os.makedirs("results/" + name + '_J')
-    
-    if os.path.isdir("results/" + name + '_rand'):
-        shutil.rmtree("results/" + name + '_rand')
-    else:
-        os.makedirs("results/" + name + '_rand')
 
     # Number of points
     n = view.shape[0]

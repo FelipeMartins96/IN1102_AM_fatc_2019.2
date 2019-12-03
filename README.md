@@ -15,3 +15,5 @@
   - outputs results for project's second question
 - `rand.py` 
   - outputs the rand index from the dataset labels and question1 output folder
+- `result_analyser.py` 
+  - outputs results data and a 2D cluster visualization using principal component analysis

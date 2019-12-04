@@ -169,23 +169,23 @@ X_test_selected = model.transform(X_test)
 
 # Models hyperparameter tuning
 
-### Random Forest
+# ### Random Forest
 
-random_grid = {'bootstrap': [True, False],
- 'max_depth': [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, None],
- 'max_features': ['auto', 'sqrt'],
- 'min_samples_leaf': [1, 2, 4],
- 'min_samples_split': [2, 5, 10],
- 'n_estimators': [200, 400, 600, 800, 1000]}
+# random_grid = {'bootstrap': [True, False],
+#  'max_depth': [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, None],
+#  'max_features': ['auto', 'sqrt'],
+#  'min_samples_leaf': [1, 2, 4],
+#  'min_samples_split': [2, 5, 10],
+#  'n_estimators': [200, 400, 600, 800, 1000]}
 
-rf = RandomForestClassifier()
-rf_random = RandomizedSearchCV(
-    estimator = rf, param_distributions = random_grid, n_iter = 100,
-    cv = 3, verbose=2, random_state=42, n_jobs = -1)
-rf_random.fit(X_train_selected, y_train)
-print(rf_random.best_score_)
-print(rf_random.best_params_)
-base_accuracy = evaluate(rf_random, X_test_selected, y_test)
+# rf = RandomForestClassifier()
+# rf_random = RandomizedSearchCV(
+#     estimator = rf, param_distributions = random_grid, n_iter = 100,
+#     cv = 3, verbose=2, random_state=42, n_jobs = -1)
+# rf_random.fit(X_train_selected, y_train)
+# print(rf_random.best_score_)
+# print(rf_random.best_params_)
+# base_accuracy = evaluate(rf_random, X_test_selected, y_test)
 
 
 ### Adaboost
@@ -200,3 +200,8 @@ ad_random.fit(X_train_selected, y_train)
 print(ad_random.best_score_)
 print(ad_random.best_params_)
 base_accuracy = evaluate(ad_random, X_test_selected, y_test)
+# 0.8606908570148237
+# {'n_estimators': 200, 'learning_rate': 0.5}
+# Model Performance
+# Average Error: 0.0878 degrees.
+# Accuracy = -inf%.

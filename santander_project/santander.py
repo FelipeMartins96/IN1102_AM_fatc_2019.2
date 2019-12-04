@@ -19,17 +19,6 @@ test = 'data/test.csv'
 # train = sys.argv[1]
 # test = sys.argv[2]
 
-def evaluate(model, test_features, test_labels):
-    predictions = model.predict(test_features)
-    errors = abs(predictions - test_labels)
-    mape = 100 * np.mean(errors / test_labels)
-    accuracy = 100 - mape
-    print('Model Performance')
-    print('Average Error: {:0.4f} degrees.'.format(np.mean(errors)))
-    print('Accuracy = {:0.2f}%.'.format(accuracy))
-    
-    return accuracy
-
 def reduce_mem_usage(df):
     """ iterate through all the columns of a dataframe and modify the data type
         to reduce memory usage.        
@@ -171,37 +160,31 @@ X_test_selected = model.transform(X_test)
 
 # ### Random Forest
 
-# random_grid = {'bootstrap': [True, False],
-#  'max_depth': [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, None],
-#  'max_features': ['auto', 'sqrt'],
-#  'min_samples_leaf': [1, 2, 4],
-#  'min_samples_split': [2, 5, 10],
-#  'n_estimators': [200, 400, 600, 800, 1000]}
+random_grid = {'bootstrap': [True, False],
+ 'max_depth': [2, 5, 10, 20],
+ 'max_features': ['auto', 'sqrt'],
+ 'min_samples_leaf': [1, 2, 4],
+ 'min_samples_split': [2, 5, 10],
+ 'n_estimators': [100, 200, 300]}
 
-# rf = RandomForestClassifier()
-# rf_random = RandomizedSearchCV(
-#     estimator = rf, param_distributions = random_grid, n_iter = 100,
-#     cv = 3, verbose=2, random_state=42, n_jobs = -1)
-# rf_random.fit(X_train_selected, y_train)
-# print(rf_random.best_score_)
-# print(rf_random.best_params_)
-# base_accuracy = evaluate(rf_random, X_test_selected, y_test)
-
+rf = RandomForestClassifier()
+rf_random = RandomizedSearchCV(
+    estimator = rf, param_distributions = random_grid, n_iter = 100,
+    cv = 3, verbose=2, random_state=42, n_jobs = -1)
+rf_random.fit(X_train_selected, y_train)
+print(rf_random.best_score_)
+print(rf_random.best_params_)
 
 ### Adaboost
 
 ad = AdaBoostClassifier()
 n_estimators_lst = [150, 200, 220]
-learning_rate_lst = [0.5, 1, 1.2]
+learning_rate_lst = [0.3, 0.5, 1]#, 1.2]
 param_dist = dict(n_estimators=n_estimators_lst, learning_rate =learning_rate_lst)
 
 ad_random = RandomizedSearchCV(ad, param_dist, cv=3, scoring='roc_auc', n_iter=3)
 ad_random.fit(X_train_selected, y_train)
 print(ad_random.best_score_)
 print(ad_random.best_params_)
-base_accuracy = evaluate(ad_random, X_test_selected, y_test)
 # 0.8606908570148237
 # {'n_estimators': 200, 'learning_rate': 0.5}
-# Model Performance
-# Average Error: 0.0878 degrees.
-# Accuracy = -inf%.

@@ -99,6 +99,56 @@ X_test_selected = model.transform(X_test)
 
 # Models test
 
+##### Random forest test for feature selection
+rf = RandomForestClassifier().fit(X_train, y_train)
+rf_prediction = rf.predict(X_test)
+print('RF without feature selection')
+print(accuracy_score(y_test, rf_prediction))
+print('')
+
+rf = RandomForestClassifier().fit(X_train_selected, y_train)
+rf_prediction = rf.predict(X_test_selected)
+print('RF with feature selection')
+print(accuracy_score(y_test, rf_prediction))
+print('')
+
+##### Adaboost test for feature selection
+ad = AdaBoostClassifier().fit(X_train, y_train)
+ad_prediction = ad.predict(X_test)
+print('AD without feature selection')
+print(accuracy_score(y_test, ad_prediction))
+print('')
+
+ad = AdaBoostClassifier().fit(X_train_selected, y_train)
+ad_prediction = ad.predict(X_test_selected)
+print('AD with feature selection')
+print(accuracy_score(y_test, ad_prediction))
+print('')
+
+##### LightGBM test for feature selection
+lgb = LGBMClassifier().fit(X_train, y_train)
+print('LGBM without feature selection')
+print(accuracy_score(y_test, lgb.predict(X_test)))
+print('')
+
+lgb = LGBMClassifier().fit(X_train_selected, y_train)
+print('LGBM with feature selection')
+print(accuracy_score(y_test, lgb.predict(X_test_selected)))
+
+##### LogistRegression test for feature selection
+lr = LogisticRegression().fit(X_train, y_train)
+lr_prediction = lr.predict(X_test)
+print('LR without feature selection')
+print(accuracy_score(y_test, lr_prediction))
+print('')
+
+lr = LogisticRegression().fit(X_train_selected, y_train)
+lr_prediction = lr.predict(X_test_selected)
+print('LR with feature selection')
+print(accuracy_score(y_test, lr_prediction))
+print('')
+
+
 # rf = RandomForestClassifier(n_estimators=100, n_jobs=4).fit(X_train, y_train)
 # rf_prediction = rf.predict(X_test)
 # print('X_train')
@@ -143,13 +193,13 @@ X_test_selected = model.transform(X_test)
 
 # # RandomizedSearch on Adaboost
 
-ad = AdaBoostClassifier()
-n_estimators_lst = [150, 200]
-learning_rate_lst = [0.01, 0.05, 0.1, 0.5, 1]
-param_dist = dict(n_estimators=n_estimators_lst, learning_rate =learning_rate_lst)
+# ad = AdaBoostClassifier()
+# n_estimators_lst = [150, 200]
+# learning_rate_lst = [0.01, 0.05, 0.1, 0.5, 1]
+# param_dist = dict(n_estimators=n_estimators_lst, learning_rate =learning_rate_lst)
 
-rand = RandomizedSearchCV(ad, param_dist, cv=3, scoring='roc_auc', n_iter=10)
-rand.fit(X_train, y_train)
+# rand = RandomizedSearchCV(ad, param_dist, cv=3, scoring='roc_auc', n_iter=10)
+# rand.fit(X_train, y_train)
 # print(rand.best_score_)
 # print(rand.best_params_)
 

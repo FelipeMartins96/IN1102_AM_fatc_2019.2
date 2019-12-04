@@ -19,6 +19,17 @@ test = 'data/test.csv'
 # train = sys.argv[1]
 # test = sys.argv[2]
 
+def evaluate(model, test_features, test_labels):
+    predictions = model.predict(test_features)
+    errors = abs(predictions - test_labels)
+    mape = 100 * np.mean(errors / test_labels)
+    accuracy = 100 - mape
+    print('Model Performance')
+    print('Average Error: {:0.4f} degrees.'.format(np.mean(errors)))
+    print('Accuracy = {:0.2f}%.'.format(accuracy))
+    
+    return accuracy
+
 def reduce_mem_usage(df):
     """ iterate through all the columns of a dataframe and modify the data type
         to reduce memory usage.        
@@ -99,122 +110,93 @@ X_test_selected = model.transform(X_test)
 
 # Models test
 
-##### Random forest test for feature selection
-rf = RandomForestClassifier().fit(X_train, y_train)
-rf_prediction = rf.predict(X_test)
-print('RF without feature selection')
-print(accuracy_score(y_test, rf_prediction))
-print('')
-#0.8980666666666667
-
-rf = RandomForestClassifier().fit(X_train_selected, y_train)
-rf_prediction = rf.predict(X_test_selected)
-print('RF with feature selection')
-print(accuracy_score(y_test, rf_prediction))
-print('')
-#0.8980166666666667
-
-##### Adaboost test for feature selection
-ad = AdaBoostClassifier().fit(X_train, y_train)
-ad_prediction = ad.predict(X_test)
-print('AD without feature selection')
-print(accuracy_score(y_test, ad_prediction))
-print('')
-#0.90525
-
-ad = AdaBoostClassifier().fit(X_train_selected, y_train)
-ad_prediction = ad.predict(X_test_selected)
-print('AD with feature selection')
-print(accuracy_score(y_test, ad_prediction))
-print('')
-#0.9053333333333333
-
-##### LightGBM test for feature selection
-lgb = LGBMClassifier().fit(X_train, y_train)
-print('LGBM without feature selection')
-print(accuracy_score(y_test, lgb.predict(X_test)))
-print('')
-#0.9056333333333333
-
-lgb = LGBMClassifier().fit(X_train_selected, y_train)
-print('LGBM with feature selection')
-print(accuracy_score(y_test, lgb.predict(X_test_selected)))
-#0.90645
-
-##### LogistRegression test for feature selection
-lr = LogisticRegression().fit(X_train, y_train)
-lr_prediction = lr.predict(X_test)
-print('LR without feature selection')
-print(accuracy_score(y_test, lr_prediction))
-print('')
-#0.9144833333333333
-
-lr = LogisticRegression().fit(X_train_selected, y_train)
-lr_prediction = lr.predict(X_test_selected)
-print('LR with feature selection')
-print(accuracy_score(y_test, lr_prediction))
-print('')
-#0.90715
-
-# rf = RandomForestClassifier(n_estimators=100, n_jobs=4).fit(X_train, y_train)
+# ##### Random forest test for feature selection
+# rf = RandomForestClassifier().fit(X_train, y_train)
 # rf_prediction = rf.predict(X_test)
-# print('X_train')
+# print('RF without feature selection')
 # print(accuracy_score(y_test, rf_prediction))
-#0.8976
+# print('')
+# #0.8980666666666667
 
-# rf = RandomForestClassifier(n_estimators=100, n_jobs=4).fit(X_train_selected, y_train)
+# rf = RandomForestClassifier().fit(X_train_selected, y_train)
 # rf_prediction = rf.predict(X_test_selected)
-# print('X_train_selected')
+# print('RF with feature selection')
 # print(accuracy_score(y_test, rf_prediction))
-#0.8980
+# print('')
+# #0.8980166666666667
 
-# lr = LogisticRegression(
-#     C=1, random_state=0, solver='lbfgs', max_iter=500, n_jobs=4, 
-#     multi_class='multinomial').fit(X_train, y_train)
-# lr_prediction = lr.predict(X_test)
-# print('X_train')
-# print(accuracy_score(y_test, lr_prediction))
-#0.9144666666666666
+# ##### Adaboost test for feature selection
+# ad = AdaBoostClassifier().fit(X_train, y_train)
+# ad_prediction = ad.predict(X_test)
+# print('AD without feature selection')
+# print(accuracy_score(y_test, ad_prediction))
+# print('')
+# #0.90525
 
-# lr = LogisticRegression(
-#     C=1, random_state=0, solver='lbfgs', max_iter=500, n_jobs=4, 
-#     multi_class='multinomial').fit(X_train_selected, y_train)
-# lr_prediction = lr.predict(X_test_selected)
-# print('X_train_selected')
-# print(accuracy_score(y_test, lr_prediction))
-# 0.90715
+# ad = AdaBoostClassifier().fit(X_train_selected, y_train)
+# ad_prediction = ad.predict(X_test_selected)
+# print('AD with feature selection')
+# print(accuracy_score(y_test, ad_prediction))
+# print('')
+# #0.9053333333333333
 
-# lgb = LGBMClassifier(random_state=17, num_leaves=63, max_depth=-1,
-#                      learning_rate=0.1, n_estimators=200)
-# lgb.fit(X_train, y_train)
-# print('X_train')
+# ##### LightGBM test for feature selection
+# lgb = LGBMClassifier().fit(X_train, y_train)
+# print('LGBM without feature selection')
 # print(accuracy_score(y_test, lgb.predict(X_test)))
-#0.9149666666666667
+# print('')
+# #0.9056333333333333
 
-# lgb = LGBMClassifier(random_state=17, num_leaves=63, max_depth=-1,
-#                      learning_rate=0.1, n_estimators=200)
-# lgb.fit(X_train_selected, y_train)
-# print('X_train_selected')
+# lgb = LGBMClassifier().fit(X_train_selected, y_train)
+# print('LGBM with feature selection')
 # print(accuracy_score(y_test, lgb.predict(X_test_selected)))
-#0.9149666666666667
+# #0.90645
 
-# # RandomizedSearch on Adaboost
+# ##### LogistRegression test for feature selection
+# lr = LogisticRegression().fit(X_train, y_train)
+# lr_prediction = lr.predict(X_test)
+# print('LR without feature selection')
+# print(accuracy_score(y_test, lr_prediction))
+# print('')
+# #0.9144833333333333
 
-# ad = AdaBoostClassifier()
-# n_estimators_lst = [150, 200]
-# learning_rate_lst = [0.01, 0.05, 0.1, 0.5, 1]
-# param_dist = dict(n_estimators=n_estimators_lst, learning_rate =learning_rate_lst)
+# lr = LogisticRegression().fit(X_train_selected, y_train)
+# lr_prediction = lr.predict(X_test_selected)
+# print('LR with feature selection')
+# print(accuracy_score(y_test, lr_prediction))
+# print('')
+# #0.90715
 
-# rand = RandomizedSearchCV(ad, param_dist, cv=3, scoring='roc_auc', n_iter=10)
-# rand.fit(X_train, y_train)
-# print(rand.best_score_)
-# print(rand.best_params_)
+# Models hyperparameter tuning
 
-# # RandomizedSearch on LightBoost
-# import lightgbm as lgb
-# fit_params={"early_stopping_rounds":30, 
-#             "eval_metric" : 'auc', 
-#             "eval_set" : [(X_test_selected,y_test)],
-#             'eval_names': ['valid'],
-#             'verbose': 100,
-#             'categorical_feature': 'auto'}
+### Random Forest
+
+random_grid = {'bootstrap': [True, False],
+ 'max_depth': [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, None],
+ 'max_features': ['auto', 'sqrt'],
+ 'min_samples_leaf': [1, 2, 4],
+ 'min_samples_split': [2, 5, 10],
+ 'n_estimators': [200, 400, 600, 800, 1000]}
+
+rf = RandomForestClassifier()
+rf_random = RandomizedSearchCV(
+    estimator = rf, param_distributions = random_grid, n_iter = 100,
+    cv = 3, verbose=2, random_state=42, n_jobs = -1)
+rf_random.fit(X_train_selected, y_train)
+print(rf_random.best_score_)
+print(rf_random.best_params_)
+base_accuracy = evaluate(rf_random, X_test_selected, y_test)
+
+
+### Adaboost
+
+ad = AdaBoostClassifier()
+n_estimators_lst = [150, 200, 220]
+learning_rate_lst = [0.5, 1, 1.2]
+param_dist = dict(n_estimators=n_estimators_lst, learning_rate =learning_rate_lst)
+
+ad_random = RandomizedSearchCV(ad, param_dist, cv=3, scoring='roc_auc', n_iter=3)
+ad_random.fit(X_train_selected, y_train)
+print(ad_random.best_score_)
+print(ad_random.best_params_)
+base_accuracy = evaluate(ad_random, X_test_selected, y_test)

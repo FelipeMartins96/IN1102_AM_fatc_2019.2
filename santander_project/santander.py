@@ -13,11 +13,11 @@ import numpy as np
 import sys
 
 
-#train = '/home/george/Documents/Mestrado/IF699/cleber/projeto_santander/data/train.csv'
-#test = '/home/george/Documents/Mestrado/IF699/cleber/projeto_santander/data/test.csv'
+train = 'data/train.csv'
+test = 'data/test.csv'
 
-train = sys.argv[1]
-test = sys.argv[2]
+# train = sys.argv[1]
+# test = sys.argv[2]
 
 def reduce_mem_usage(df):
     """ iterate through all the columns of a dataframe and modify the data type
@@ -105,12 +105,14 @@ rf_prediction = rf.predict(X_test)
 print('RF without feature selection')
 print(accuracy_score(y_test, rf_prediction))
 print('')
+#0.8980666666666667
 
 rf = RandomForestClassifier().fit(X_train_selected, y_train)
 rf_prediction = rf.predict(X_test_selected)
 print('RF with feature selection')
 print(accuracy_score(y_test, rf_prediction))
 print('')
+#0.8980166666666667
 
 ##### Adaboost test for feature selection
 ad = AdaBoostClassifier().fit(X_train, y_train)
@@ -118,22 +120,26 @@ ad_prediction = ad.predict(X_test)
 print('AD without feature selection')
 print(accuracy_score(y_test, ad_prediction))
 print('')
+#0.90525
 
 ad = AdaBoostClassifier().fit(X_train_selected, y_train)
 ad_prediction = ad.predict(X_test_selected)
 print('AD with feature selection')
 print(accuracy_score(y_test, ad_prediction))
 print('')
+#0.9053333333333333
 
 ##### LightGBM test for feature selection
 lgb = LGBMClassifier().fit(X_train, y_train)
 print('LGBM without feature selection')
 print(accuracy_score(y_test, lgb.predict(X_test)))
 print('')
+#0.9056333333333333
 
 lgb = LGBMClassifier().fit(X_train_selected, y_train)
 print('LGBM with feature selection')
 print(accuracy_score(y_test, lgb.predict(X_test_selected)))
+#0.90645
 
 ##### LogistRegression test for feature selection
 lr = LogisticRegression().fit(X_train, y_train)
@@ -141,13 +147,14 @@ lr_prediction = lr.predict(X_test)
 print('LR without feature selection')
 print(accuracy_score(y_test, lr_prediction))
 print('')
+#0.9144833333333333
 
 lr = LogisticRegression().fit(X_train_selected, y_train)
 lr_prediction = lr.predict(X_test_selected)
 print('LR with feature selection')
 print(accuracy_score(y_test, lr_prediction))
 print('')
-
+#0.90715
 
 # rf = RandomForestClassifier(n_estimators=100, n_jobs=4).fit(X_train, y_train)
 # rf_prediction = rf.predict(X_test)
@@ -211,4 +218,3 @@ print('')
 #             'eval_names': ['valid'],
 #             'verbose': 100,
 #             'categorical_feature': 'auto'}
-

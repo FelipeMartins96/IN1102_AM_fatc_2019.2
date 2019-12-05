@@ -158,38 +158,51 @@ X_test_selected = model.transform(X_test)
 
 # Models hyperparameter tuning
 
-# ### Random Forest
+# # ### Random Forest
 
-random_grid = {'bootstrap': [True, False],
- 'max_depth': [2, 5, 8],# 20
- 'max_features': ['auto', 'sqrt'],
- 'min_samples_leaf': [4, 6, 8],# 1, 2
- 'min_samples_split': [2, 5, 10],
- 'n_estimators': [25, 50, 100]}# 300, 200
+# random_grid = {'bootstrap': [True, False],
+#  'max_depth': [2, 5, 8],# 20
+#  'max_features': ['auto', 'sqrt'],
+#  'min_samples_leaf': [4, 6, 8],# 1, 2
+#  'min_samples_split': [2, 5, 10],
+#  'n_estimators': [25, 50, 100]}# 300, 200
 
-rf = RandomForestClassifier()
-rf_random = RandomizedSearchCV(
-    estimator = rf, param_distributions = random_grid, n_iter = 4,
-    cv = 3, verbose=2, random_state=42, n_jobs = -1)
-rf_random.fit(X_train, y_train)
-print(rf_random.best_score_)
-print(rf_random.best_params_)
-# 0.9003285714285715
-# {'n_estimators': 25, 'min_samples_split': 10, 'min_samples_leaf': 8, 'max_features': 'auto', 'max_depth': 8, 'bootstrap': True}
-
-
-### Adaboost
-
-ad = AdaBoostClassifier()
-n_estimators_lst = [200, 220, 240]# 150
-learning_rate_lst = [0.3, 0.5, 1]#, 1.2]
-param_dist = dict(n_estimators=n_estimators_lst, learning_rate =learning_rate_lst)
+# rf = RandomForestClassifier()
+# rf_random = RandomizedSearchCV(
+#     estimator = rf, param_distributions = random_grid, n_iter = 4,
+#     cv = 3, verbose=2, random_state=42, n_jobs = -1)
+# rf_random.fit(X_train, y_train)
+# print(rf_random.best_score_)
+# print(rf_random.best_params_)
+# # 0.9003285714285715
+# # {'n_estimators': 25, 'min_samples_split': 10, 'min_samples_leaf': 8, 'max_features': 'auto', 'max_depth': 8, 'bootstrap': True}
 
 
-ad_random = RandomizedSearchCV(ad, param_dist, cv=3, scoring='roc_auc', n_iter=4, n_jobs=-1)
-ad_random.fit(X_train, y_train)
-print(ad_random.best_score_)
-print(ad_random.best_params_)
-# 0.8762975069015021
-# {'n_estimators': 240, 'learning_rate': 0.5}
+# ### Adaboost
 
+# ad = AdaBoostClassifier()
+# n_estimators_lst = [200, 220, 240]# 150
+# learning_rate_lst = [0.3, 0.5, 1]#, 1.2]
+# param_dist = dict(n_estimators=n_estimators_lst, learning_rate =learning_rate_lst)
+
+
+# ad_random = RandomizedSearchCV(ad, param_dist, cv=3, scoring='roc_auc', n_iter=4, n_jobs=-1)
+# ad_random.fit(X_train, y_train)
+# print(ad_random.best_score_)
+# print(ad_random.best_params_)
+# # 0.8762975069015021
+# # {'n_estimators': 240, 'learning_rate': 0.5}
+
+##### LogistRegression test for feature selection
+lr = LogisticRegression()
+penalty_lst = ['l1', 'l2']
+C_lst = [0.001, 0.01, 0.1, 1, 10, 100]
+param_dist = dict(penalty=penalty_lst, C =C_lst)
+
+
+lr_random = RandomizedSearchCV(lr, param_dist, cv=3, scoring='roc_auc', n_iter=4, n_jobs=-1)
+lr_random.fit(train_x, train_y)
+print(lr_random.best_score_)
+print(lr_random.best_params_)
+# 0.8665152522826295
+# {'penalty': 'l2', 'C': 10}

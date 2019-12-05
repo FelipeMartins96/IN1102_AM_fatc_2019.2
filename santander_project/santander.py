@@ -161,11 +161,11 @@ X_test_selected = model.transform(X_test)
 # ### Random Forest
 
 random_grid = {'bootstrap': [True, False],
- 'max_depth': [2, 5, 10, 20],
+ 'max_depth': [2, 5, 8],# 20
  'max_features': ['auto', 'sqrt'],
- 'min_samples_leaf': [1, 2, 4],
+ 'min_samples_leaf': [4, 6, 8],# 1, 2
  'min_samples_split': [2, 5, 10],
- 'n_estimators': [100, 200, 300]}
+ 'n_estimators': [25, 50, 100]}# 300, 200
 
 rf = RandomForestClassifier()
 rf_random = RandomizedSearchCV(
@@ -174,20 +174,19 @@ rf_random = RandomizedSearchCV(
 rf_random.fit(X_train, y_train)
 print(rf_random.best_score_)
 print(rf_random.best_params_)
-# [Parallel(n_jobs=-1)]: Done  12 out of  12 | elapsed:  2.5min finished
 # 0.9003285714285715
-# {'n_estimators': 100, 'min_samples_split': 5, 'min_samples_leaf': 4, 'max_features': 'sqrt', 'max_depth': 5, 'bootstrap': True}
+# {'n_estimators': 50, 'min_samples_split': 5, 'min_samples_leaf': 6, 'max_features': 'sqrt', 'max_depth': 5, 'bootstrap': True}
 
 
 ### Adaboost
 
 ad = AdaBoostClassifier()
-n_estimators_lst = [150, 200, 220]
+n_estimators_lst = [200, 220, 240]# 150
 learning_rate_lst = [0.3, 0.5, 1]#, 1.2]
 param_dist = dict(n_estimators=n_estimators_lst, learning_rate =learning_rate_lst)
 
 
-ad_random = RandomizedSearchCV(ad, param_dist, cv=3, scoring='roc_auc', n_iter=4)
+ad_random = RandomizedSearchCV(ad, param_dist, cv=3, scoring='roc_auc', n_iter=4, n_jobs=-1)
 ad_random.fit(X_train, y_train)
 print(ad_random.best_score_)
 print(ad_random.best_params_)

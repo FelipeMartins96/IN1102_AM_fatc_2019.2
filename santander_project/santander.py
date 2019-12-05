@@ -175,7 +175,7 @@ rf_random.fit(X_train, y_train)
 print(rf_random.best_score_)
 print(rf_random.best_params_)
 # 0.9003285714285715
-# {'n_estimators': 50, 'min_samples_split': 5, 'min_samples_leaf': 6, 'max_features': 'sqrt', 'max_depth': 5, 'bootstrap': True}
+# {'n_estimators': 25, 'min_samples_split': 10, 'min_samples_leaf': 8, 'max_features': 'auto', 'max_depth': 8, 'bootstrap': True}
 
 
 ### Adaboost
@@ -190,5 +190,6 @@ ad_random = RandomizedSearchCV(ad, param_dist, cv=3, scoring='roc_auc', n_iter=4
 ad_random.fit(X_train, y_train)
 print(ad_random.best_score_)
 print(ad_random.best_params_)
-# 0.8738800694920262
-# {'n_estimators': 220, 'learning_rate': 0.5}
+# 0.8762975069015021
+# {'n_estimators': 240, 'learning_rate': 0.5}
+

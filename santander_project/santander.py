@@ -206,3 +206,36 @@ print(lr_random.best_score_)
 print(lr_random.best_params_)
 # 0.8665152522826295
 # {'penalty': 'l2', 'C': 10}
+
+
+##### LightGBM test for feature selection
+# lgb = LGBMClassifier(random_state=17)
+# param_dist = {
+# 'num_leaves' : [2, 5, 8, 10, 20, 30],
+# 'n_estimators' : [80, 100, 150, 200, 250, 300, 350], 
+# 'learning_rate' : [0.1 ,0.3, 0.5, 1, 1.2], 
+# 'min_data_in_leaf': [20, 30, 40, 50, 60, 70, 80], 
+# 'max_depth' : [1, 2, 3, -1]}
+# rand = RandomizedSearchCV(lgb, param_dist, cv=3, scoring='roc_auc', n_iter=10, n_jobs=-1)
+# rand.fit(X_train, y_train)
+# rand_predict = rand.predict(X_test)
+# print(rand.best_score_)
+# print(rand.best_params_)
+# print(accuracy_score(y_test, rand_predict))
+#0.8618663529002579
+# {'n_estimators': 150, 'num_leaves': 5, 'learning_rate': 0.5, 'max_depth': 2, 'min_data_in_leaf': 30}
+# 0.9124
+# {'n_estimators': 200, 'num_leaves': 2, 'learning_rate': 0.5, 'max_depth': 2, 'min_data_in_leaf': 50}
+# 0.9142166666666667
+# {'n_estimators': 100, 'num_leaves': 5, 'learning_rate': 0.3, 'max_depth': 2, 'min_data_in_leaf': 60}
+# 0.9062833333333333
+# {'n_estimators': 100, 'num_leaves': 8, 'learning_rate': 0.5, 'max_depth': -1, 'min_data_in_leaf': 60}
+# 0.9160666666666667
+# {'n_estimators': 150, 'num_leaves': 8, 'learning_rate': 0.5, 'max_depth': 2, 'min_data_in_leaf': 70}
+# 0.9158
+# {'n_estimators': 250, 'num_leaves': 10, 'learning_rate': 0.5, 'max_depth': 1, 'min_data_in_leaf': 30}
+# 0.91595
+# {'n_estimators': 150, 'num_leaves': 8, 'learning_rate': 0.5, 'max_depth': 2, 'min_data_in_leaf': 50}
+# 0.9158
+# {'n_estimators': 300, 'num_leaves': 20, 'learning_rate': 0.5, 'max_depth': 2, 'min_data_in_leaf': 30}
+# 0.9191166666666667

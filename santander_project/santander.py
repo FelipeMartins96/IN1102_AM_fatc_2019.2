@@ -169,9 +169,9 @@ random_grid = {'bootstrap': [True, False],
 
 rf = RandomForestClassifier()
 rf_random = RandomizedSearchCV(
-    estimator = rf, param_distributions = random_grid, n_iter = 100,
+    estimator = rf, param_distributions = random_grid, n_iter = 4,
     cv = 3, verbose=2, random_state=42, n_jobs = -1)
-rf_random.fit(X_train_selected, y_train)
+rf_random.fit(X_train, y_train)
 print(rf_random.best_score_)
 print(rf_random.best_params_)
 
@@ -181,10 +181,14 @@ ad = AdaBoostClassifier()
 n_estimators_lst = [150, 200, 220]
 learning_rate_lst = [0.3, 0.5, 1]#, 1.2]
 param_dist = dict(n_estimators=n_estimators_lst, learning_rate =learning_rate_lst)
+# [Parallel(n_jobs=-1)]: Done  12 out of  12 | elapsed:  2.5min finished
+# 0.9003285714285715
 
-ad_random = RandomizedSearchCV(ad, param_dist, cv=3, scoring='roc_auc', n_iter=3)
-ad_random.fit(X_train_selected, y_train)
+
+
+ad_random = RandomizedSearchCV(ad, param_dist, cv=3, scoring='roc_auc', n_iter=4)
+ad_random.fit(X_train, y_train)
 print(ad_random.best_score_)
 print(ad_random.best_params_)
-# 0.8606908570148237
-# {'n_estimators': 200, 'learning_rate': 0.5}
+# 0.8738800694920262
+# {'n_estimators': 220, 'learning_rate': 0.5}

@@ -187,7 +187,7 @@ learning_rate_lst = [0.3, 0.5, 1]#, 1.2]
 param_dist = dict(n_estimators=n_estimators_lst, learning_rate =learning_rate_lst)
 
 
-ad_random = RandomizedSearchCV(ad, param_dist, cv=3, scoring='roc_auc', n_iter=4)
+ad_random = RandomizedSearchCV(ad, param_dist, cv=3, scoring='roc_auc', n_iter=4, n_jobs=-1)
 ad_random.fit(X_train, y_train)
 print(ad_random.best_score_)
 print(ad_random.best_params_)
